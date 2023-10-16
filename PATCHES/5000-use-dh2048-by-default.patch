@@ -1,0 +1,30 @@
+Description: Use 2048-bit DH keys by default.
+ It is a sensible size nowadays; also, the Debian package of OpenSSL 1.1
+ no longer accepts smaller DH keys in its default configuration.
+Bug-Debian: https://bugs.debian.org/923615
+Forwarded: no
+Author: Sebastian Andrzej Siewior <sebastian@breakpoint.cc>
+Signed-Off-By: Neil Hanlon <neil@rockylinux.org>
+Last-Update: 2019-03-02
+
+diff -ru a/lib/AnyEvent/TLS.pm b/lib/AnyEvent/TLS.pm
+--- a/lib/AnyEvent/TLS.pm	2016-07-21 06:34:40.000000000 -0400
++++ b/lib/AnyEvent/TLS.pm	2021-04-18 17:26:17.999852155 -0400
+@@ -472,7 +472,7 @@
+ =item dh => $string
+ 
+ Specify the Diffie-Hellman parameters in PEM format directly as a string
+-(see C<dh_file>), the default is C<schmorp1539> unless C<dh_file> was
++(see C<dh_file>), the default is C<schmorp2048> unless C<dh_file> was
+ specified.
+ 
+ AnyEvent::TLS supports supports a number of precomputed DH parameters,
+@@ -631,7 +631,7 @@
+       $dh_bio = Net::SSLeay::BIO_new_file ($dh_file, "r")
+          or croak "$dh_file: failed to open DH parameter file: $!";
+    } else {
+-      $arg{dh} = "schmorp1539" unless exists $arg{dh};
++      $arg{dh} = "schmorp2048" unless exists $arg{dh};
+ 
+       if (defined $arg{dh}) {
+          $dh_file = "dh string";
